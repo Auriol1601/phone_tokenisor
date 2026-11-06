@@ -1,25 +1,34 @@
 {
   "configuration" : { },
-  "description" : "Description",
+  "description" : "Modèle C4 aligné sur constitutions/mission.md : contexte, conteneurs et vues dynamiques (CU2, CU3).",
   "documentation" : { },
   "id" : 1,
-  "lastModifiedDate" : "2026-11-06T16:10:26Z",
+  "lastModifiedDate" : "2026-11-06T17:27:10Z",
   "model" : {
     "people" : [ {
+      "description" : "Établit le lien entre la facture de vente et les informations du téléphone, et signe l'attestation d'origine à chaque vente.",
       "id" : "1",
       "name" : "Revendeur de téléphone reconditionné",
       "properties" : {
-        "structurizr.dsl.identifier" : "revendeur"
+        "structurizr.dsl.identifier" : "revendeur",
+        "Point ouvert" : "Revendeurs agréés : qui autorise un revendeur à émettre des jetons ? (mission.md §9)"
       },
       "relationships" : [ {
-        "description" : "Établit un lien entre la facture de vente et les informations du téléphone",
-        "destinationId" : "3",
-        "id" : "5",
+        "description" : "Établit un lien entre la facture de vente et les informations du téléphone, et signe l'attestation d'origine",
+        "destinationId" : "7",
+        "id" : "15",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Utilise pour signer l'attestation d'origine",
+        "destinationId" : "8",
+        "id" : "23",
         "sourceId" : "1",
         "tags" : "Relationship"
       } ],
-      "tags" : "Element,Person"
+      "tags" : "Element,Person,Point ouvert"
     }, {
+      "description" : "Déclare son appareil, détient le jeton et la clé de ses données, et prouve sa légitimité.",
       "id" : "2",
       "name" : "Propriétaire du téléphone reconditionné",
       "properties" : {
@@ -27,52 +36,303 @@
       },
       "relationships" : [ {
         "description" : "Déclare son appareil et conserve les informations nécessaires à sa réclamation",
-        "destinationId" : "3",
-        "id" : "6",
+        "destinationId" : "7",
+        "id" : "16",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Utilise pour prouver sa légitimité, céder le téléphone et déclarer un vol",
+        "destinationId" : "9",
+        "id" : "24",
         "sourceId" : "2",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Person"
+    }, {
+      "description" : "Vérifie le statut d'un téléphone avant achat et reçoit le jeton lors de la cession.",
+      "id" : "3",
+      "name" : "Acquéreur d'occasion",
+      "properties" : {
+        "structurizr.dsl.identifier" : "acquereur"
+      },
+      "relationships" : [ {
+        "description" : "Consulte le statut d'un téléphone via son IMEI et reçoit le jeton lors de la cession",
+        "destinationId" : "7",
+        "id" : "17",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Reçoit le jeton",
+        "destinationId" : "9",
+        "id" : "25",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Saisit l'IMEI pour consulter le statut",
+        "destinationId" : "11",
+        "id" : "26",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "description" : "Reçoivent les éléments de traçage d'un appareil déclaré volé.",
+      "id" : "4",
+      "name" : "Forces de l'ordre / PLCC",
+      "properties" : {
+        "structurizr.dsl.identifier" : "forcesOrdre",
+        "Point ouvert" : "Déclaration de vol : validation (dépôt de plainte, PLCC) avant d'afficher le statut « volé » ? (mission.md §9)"
+      },
+      "relationships" : [ {
+        "description" : "Identifie le revendeur émetteur désigné par le jeton, lorsque l'enquête se fait sans le propriétaire",
+        "destinationId" : "6",
+        "id" : "21",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Requiert les informations de l'attestation par la voie judiciaire normale, lorsque l'enquête se fait sans le propriétaire",
+        "destinationId" : "1",
+        "id" : "22",
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person,Point ouvert"
     } ],
     "softwareSystems" : [ {
+      "description" : "Stocke les attestations chiffrées, adressées par leur contenu (CID).",
       "documentation" : { },
-      "id" : "3",
+      "id" : "5",
+      "name" : "IPFS",
+      "properties" : {
+        "structurizr.dsl.identifier" : "ipfs"
+      },
+      "tags" : "Element,Software System,Système externe"
+    }, {
+      "description" : "Registre des jetons : unicité, propriété et transferts. Chaque jeton référence le CID IPFS de l'attestation chiffrée.",
+      "documentation" : { },
+      "id" : "6",
+      "name" : "Blockchain publique",
+      "properties" : {
+        "structurizr.dsl.identifier" : "blockchainPublique",
+        "Point ouvert" : "Choix de la blockchain : réseau public, frais de transaction, qui les paie ? (mission.md §9)"
+      },
+      "tags" : "Element,Software System,Système externe,Point ouvert"
+    }, {
+      "containers" : [ {
+        "description" : "Utilisée par le revendeur pour émettre l'attestation d'achat signée et le jeton lors d'une vente.",
+        "documentation" : { },
+        "id" : "8",
+        "name" : "Application revendeur",
+        "properties" : {
+          "structurizr.dsl.identifier" : "appRevendeur"
+        },
+        "relationships" : [ {
+          "description" : "Soumet l'attestation signée",
+          "destinationId" : "10",
+          "id" : "27",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Émet le jeton",
+          "destinationId" : "13",
+          "id" : "28",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Proposition",
+        "technology" : "À définir"
+      }, {
+        "description" : "Détient la clé du portefeuille du jeton et la clé de chiffrement des données ; signe les défis, divulgue sélectivement les champs de l'attestation, transfère le jeton, déclare le vol.",
+        "documentation" : { },
+        "id" : "9",
+        "name" : "Application / portefeuille propriétaire",
+        "properties" : {
+          "structurizr.dsl.identifier" : "appProprietaire"
+        },
+        "relationships" : [ {
+          "description" : "Transfère le jeton et met à jour son statut",
+          "destinationId" : "13",
+          "id" : "29",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Dépose et récupère les attestations chiffrées",
+          "destinationId" : "10",
+          "id" : "30",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Transmet par divulgation sélective les éléments de traçage (IMEI, numéro de série, modèle, revendeur)",
+          "destinationId" : "4",
+          "id" : "31",
+          "sourceId" : "9",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Proposition",
+        "technology" : "À définir"
+      }, {
+        "description" : "Interface serveur du système utilisée par les applications. Le périmètre exact de ses responsabilités reste à définir. Elle ne peut jamais déchiffrer seule les attestations.",
+        "documentation" : { },
+        "id" : "10",
+        "name" : "API backend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "apiBackend"
+        },
+        "relationships" : [ {
+          "description" : "Stocke les attestations chiffrées",
+          "destinationId" : "5",
+          "id" : "32",
+          "sourceId" : "10",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Alimente l'index",
+          "destinationId" : "14",
+          "id" : "33",
+          "sourceId" : "10",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Proposition",
+        "technology" : "À définir"
+      }, {
+        "description" : "Calcule HMAC(pepper, IMEI), interroge le registre et ne renvoie que le statut (non tokénisé, actif, volé). Point de centralisation assumé (arbitrage n°1) : limitation de débit, journal d'audit, rotation du pepper.",
+        "documentation" : { },
+        "id" : "11",
+        "name" : "Service de consultation IMEI",
+        "properties" : {
+          "structurizr.dsl.identifier" : "serviceConsultation",
+          "Point ouvert" : "Accès au service : public et anonyme avec limitation, ou réservé aux comptes vérifiés ? (mission.md §9)"
+        },
+        "relationships" : [ {
+          "description" : "Utilise le pepper pour calculer le HMAC de l'IMEI",
+          "destinationId" : "12",
+          "id" : "34",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Recherche le jeton par HMAC",
+          "destinationId" : "14",
+          "id" : "35",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Lit le statut du jeton",
+          "destinationId" : "13",
+          "id" : "36",
+          "sourceId" : "11",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Proposition,Point ouvert",
+        "technology" : "À définir"
+      }, {
+        "description" : "Stocke le pepper utilisé pour calculer le HMAC de l'IMEI. Le pepper ne permet aucun déchiffrement.",
+        "documentation" : { },
+        "id" : "12",
+        "name" : "HSM / coffre-fort de clés",
+        "properties" : {
+          "structurizr.dsl.identifier" : "hsm"
+        },
+        "tags" : "Element,Container,Proposition,Stockage",
+        "technology" : "À définir (HSM ou coffre-fort de clés)"
+      }, {
+        "description" : "Code du projet déployé sur la blockchain publique : unicité, propriété, transferts et statut des jetons.",
+        "documentation" : { },
+        "id" : "13",
+        "name" : "Smart contracts du registre de jetons",
+        "properties" : {
+          "structurizr.dsl.identifier" : "smartContracts"
+        },
+        "relationships" : [ {
+          "description" : "Est déployé sur",
+          "destinationId" : "6",
+          "id" : "37",
+          "sourceId" : "13",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Proposition",
+        "technology" : "À définir"
+      }, {
+        "description" : "Index du registre par HMAC(pepper, IMEI). Rôle exact vis-à-vis du registre porté par la blockchain à confirmer.",
+        "documentation" : { },
+        "id" : "14",
+        "name" : "Base d'index",
+        "properties" : {
+          "structurizr.dsl.identifier" : "baseIndex"
+        },
+        "tags" : "Element,Container,Proposition,Stockage",
+        "technology" : "À définir"
+      } ],
+      "description" : "Émet les jetons, gère les attestations et le registre de statut des appareils.",
+      "documentation" : { },
+      "id" : "7",
       "name" : "Système de tokénisation de téléphone reconditionné",
       "properties" : {
         "structurizr.dsl.identifier" : "systemeTokenisation"
       },
       "relationships" : [ {
-        "description" : "Échange pour rendre le système décentralisé",
+        "description" : "Fournit, à l'initiative du propriétaire, les éléments de traçage d'un appareil déclaré volé (divulgation sélective)",
         "destinationId" : "4",
-        "id" : "7",
-        "sourceId" : "3",
+        "id" : "18",
+        "sourceId" : "7",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Stocke les attestations chiffrées",
+        "destinationId" : "5",
+        "id" : "19",
+        "sourceId" : "7",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Émet et transfère les jetons",
+        "destinationId" : "6",
+        "id" : "20",
+        "sourceId" : "7",
         "tags" : "Relationship"
       } ],
-      "tags" : "Element,Software System"
-    }, {
-      "documentation" : { },
-      "id" : "4",
-      "name" : "IPFS",
-      "properties" : {
-        "structurizr.dsl.identifier" : "ipfs"
-      },
       "tags" : "Element,Software System"
     } ]
   },
   "name" : "Système de tokénisation de téléphone reconditionné",
   "properties" : {
-    "structurizr.inspection.error" : "8",
-    "structurizr.dsl" : "d29ya3NwYWNlICJTeXN0w6htZSBkZSB0b2vDqW5pc2F0aW9uIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIiB7CgogICAgbW9kZWwgewogICAgICAgIHJldmVuZGV1ciA9IHBlcnNvbiAiUmV2ZW5kZXVyIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIgogICAgICAgIHByb3ByaWV0YWlyZSA9IHBlcnNvbiAiUHJvcHJpw6l0YWlyZSBkdSB0w6lsw6lwaG9uZSByZWNvbmRpdGlvbm7DqSIKICAgICAgICBzeXN0ZW1lVG9rZW5pc2F0aW9uID0gc29mdHdhcmVTeXN0ZW0gIlN5c3TDqG1lIGRlIHRva8OpbmlzYXRpb24gZGUgdMOpbMOpcGhvbmUgcmVjb25kaXRpb25uw6kiCiAgICAgICAgaXBmcyA9IHNvZnR3YXJlU3lzdGVtICJJUEZTIgoKICAgICAgICByZXZlbmRldXIgLT4gc3lzdGVtZVRva2VuaXNhdGlvbiAiw4l0YWJsaXQgdW4gbGllbiBlbnRyZSBsYSBmYWN0dXJlIGRlIHZlbnRlIGV0IGxlcyBpbmZvcm1hdGlvbnMgZHUgdMOpbMOpcGhvbmUiCiAgICAgICAgcHJvcHJpZXRhaXJlIC0+IHN5c3RlbWVUb2tlbmlzYXRpb24gIkTDqWNsYXJlIHNvbiBhcHBhcmVpbCBldCBjb25zZXJ2ZSBsZXMgaW5mb3JtYXRpb25zIG7DqWNlc3NhaXJlcyDDoCBzYSByw6ljbGFtYXRpb24iCiAgICAgICAgc3lzdGVtZVRva2VuaXNhdGlvbiAtPiBpcGZzICLDiWNoYW5nZSBwb3VyIHJlbmRyZSBsZSBzeXN0w6htZSBkw6ljZW50cmFsaXPDqSIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzeXN0ZW1lVG9rZW5pc2F0aW9uICJTeXN0ZW1Db250ZXh0IiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQogICAgfQp9",
+    "structurizr.inspection.error" : "26",
+    "structurizr.dsl" : "d29ya3NwYWNlICJTeXN0w6htZSBkZSB0b2vDqW5pc2F0aW9uIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIiAiTW9kw6hsZSBDNCBhbGlnbsOpIHN1ciBjb25zdGl0dXRpb25zL21pc3Npb24ubWQgOiBjb250ZXh0ZSwgY29udGVuZXVycyBldCB2dWVzIGR5bmFtaXF1ZXMgKENVMiwgQ1UzKS4iIHsKCiAgICBtb2RlbCB7CgogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIC8vIFBlcnNvbm5lcwogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIHJldmVuZGV1ciA9IHBlcnNvbiAiUmV2ZW5kZXVyIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIiAiw4l0YWJsaXQgbGUgbGllbiBlbnRyZSBsYSBmYWN0dXJlIGRlIHZlbnRlIGV0IGxlcyBpbmZvcm1hdGlvbnMgZHUgdMOpbMOpcGhvbmUsIGV0IHNpZ25lIGwnYXR0ZXN0YXRpb24gZCdvcmlnaW5lIMOgIGNoYXF1ZSB2ZW50ZS4iIHsKICAgICAgICAgICAgcHJvcGVydGllcyB7CiAgICAgICAgICAgICAgICAiUG9pbnQgb3V2ZXJ0IiAiUmV2ZW5kZXVycyBhZ3LDqcOpcyA6IHF1aSBhdXRvcmlzZSB1biByZXZlbmRldXIgw6Agw6ltZXR0cmUgZGVzIGpldG9ucyA/IChtaXNzaW9uLm1kIMKnOSkiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgdGFncyAiUG9pbnQgb3V2ZXJ0IgogICAgICAgIH0KICAgICAgICBwcm9wcmlldGFpcmUgPSBwZXJzb24gIlByb3ByacOpdGFpcmUgZHUgdMOpbMOpcGhvbmUgcmVjb25kaXRpb25uw6kiICJEw6ljbGFyZSBzb24gYXBwYXJlaWwsIGTDqXRpZW50IGxlIGpldG9uIGV0IGxhIGNsw6kgZGUgc2VzIGRvbm7DqWVzLCBldCBwcm91dmUgc2EgbMOpZ2l0aW1pdMOpLiIKICAgICAgICBhY3F1ZXJldXIgPSBwZXJzb24gIkFjcXXDqXJldXIgZCdvY2Nhc2lvbiIgIlbDqXJpZmllIGxlIHN0YXR1dCBkJ3VuIHTDqWzDqXBob25lIGF2YW50IGFjaGF0IGV0IHJlw6dvaXQgbGUgamV0b24gbG9ycyBkZSBsYSBjZXNzaW9uLiIKICAgICAgICBmb3JjZXNPcmRyZSA9IHBlcnNvbiAiRm9yY2VzIGRlIGwnb3JkcmUgLyBQTENDIiAiUmXDp29pdmVudCBsZXMgw6lsw6ltZW50cyBkZSB0cmHDp2FnZSBkJ3VuIGFwcGFyZWlsIGTDqWNsYXLDqSB2b2zDqS4iIHsKICAgICAgICAgICAgcHJvcGVydGllcyB7CiAgICAgICAgICAgICAgICAiUG9pbnQgb3V2ZXJ0IiAiRMOpY2xhcmF0aW9uIGRlIHZvbCA6IHZhbGlkYXRpb24gKGTDqXDDtHQgZGUgcGxhaW50ZSwgUExDQykgYXZhbnQgZCdhZmZpY2hlciBsZSBzdGF0dXQgwqsgdm9sw6kgwrsgPyAobWlzc2lvbi5tZCDCpzkpIgogICAgICAgICAgICB9CiAgICAgICAgICAgIHRhZ3MgIlBvaW50IG91dmVydCIKICAgICAgICB9CgogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIC8vIFN5c3TDqG1lcyBleHRlcm5lcwogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIGlwZnMgPSBzb2Z0d2FyZVN5c3RlbSAiSVBGUyIgIlN0b2NrZSBsZXMgYXR0ZXN0YXRpb25zIGNoaWZmcsOpZXMsIGFkcmVzc8OpZXMgcGFyIGxldXIgY29udGVudSAoQ0lEKS4iIHsKICAgICAgICAgICAgdGFncyAiU3lzdMOobWUgZXh0ZXJuZSIKICAgICAgICB9CiAgICAgICAgYmxvY2tjaGFpblB1YmxpcXVlID0gc29mdHdhcmVTeXN0ZW0gIkJsb2NrY2hhaW4gcHVibGlxdWUiICJSZWdpc3RyZSBkZXMgamV0b25zIDogdW5pY2l0w6ksIHByb3ByacOpdMOpIGV0IHRyYW5zZmVydHMuIENoYXF1ZSBqZXRvbiByw6lmw6lyZW5jZSBsZSBDSUQgSVBGUyBkZSBsJ2F0dGVzdGF0aW9uIGNoaWZmcsOpZS4iIHsKICAgICAgICAgICAgcHJvcGVydGllcyB7CiAgICAgICAgICAgICAgICAiUG9pbnQgb3V2ZXJ0IiAiQ2hvaXggZGUgbGEgYmxvY2tjaGFpbiA6IHLDqXNlYXUgcHVibGljLCBmcmFpcyBkZSB0cmFuc2FjdGlvbiwgcXVpIGxlcyBwYWllID8gKG1pc3Npb24ubWQgwqc5KSIKICAgICAgICAgICAgfQogICAgICAgICAgICB0YWdzICJTeXN0w6htZSBleHRlcm5lIiAiUG9pbnQgb3V2ZXJ0IgogICAgICAgIH0KCiAgICAgICAgLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgLy8gU3lzdMOobWUgw6l0dWRpw6kgZXQgc2VzIGNvbnRlbmV1cnMKICAgICAgICAvLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICBzeXN0ZW1lVG9rZW5pc2F0aW9uID0gc29mdHdhcmVTeXN0ZW0gIlN5c3TDqG1lIGRlIHRva8OpbmlzYXRpb24gZGUgdMOpbMOpcGhvbmUgcmVjb25kaXRpb25uw6kiICLDiW1ldCBsZXMgamV0b25zLCBnw6hyZSBsZXMgYXR0ZXN0YXRpb25zIGV0IGxlIHJlZ2lzdHJlIGRlIHN0YXR1dCBkZXMgYXBwYXJlaWxzLiIgewoKICAgICAgICAgICAgYXBwUmV2ZW5kZXVyID0gY29udGFpbmVyICJBcHBsaWNhdGlvbiByZXZlbmRldXIiICJVdGlsaXPDqWUgcGFyIGxlIHJldmVuZGV1ciBwb3VyIMOpbWV0dHJlIGwnYXR0ZXN0YXRpb24gZCdhY2hhdCBzaWduw6llIGV0IGxlIGpldG9uIGxvcnMgZCd1bmUgdmVudGUuIiAiw4AgZMOpZmluaXIiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIlByb3Bvc2l0aW9uIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGFwcFByb3ByaWV0YWlyZSA9IGNvbnRhaW5lciAiQXBwbGljYXRpb24gLyBwb3J0ZWZldWlsbGUgcHJvcHJpw6l0YWlyZSIgIkTDqXRpZW50IGxhIGNsw6kgZHUgcG9ydGVmZXVpbGxlIGR1IGpldG9uIGV0IGxhIGNsw6kgZGUgY2hpZmZyZW1lbnQgZGVzIGRvbm7DqWVzIDsgc2lnbmUgbGVzIGTDqWZpcywgZGl2dWxndWUgc8OpbGVjdGl2ZW1lbnQgbGVzIGNoYW1wcyBkZSBsJ2F0dGVzdGF0aW9uLCB0cmFuc2bDqHJlIGxlIGpldG9uLCBkw6ljbGFyZSBsZSB2b2wuIiAiw4AgZMOpZmluaXIiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIlByb3Bvc2l0aW9uIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGFwaUJhY2tlbmQgPSBjb250YWluZXIgIkFQSSBiYWNrZW5kIiAiSW50ZXJmYWNlIHNlcnZldXIgZHUgc3lzdMOobWUgdXRpbGlzw6llIHBhciBsZXMgYXBwbGljYXRpb25zLiBMZSBww6lyaW3DqHRyZSBleGFjdCBkZSBzZXMgcmVzcG9uc2FiaWxpdMOpcyByZXN0ZSDDoCBkw6lmaW5pci4gRWxsZSBuZSBwZXV0IGphbWFpcyBkw6ljaGlmZnJlciBzZXVsZSBsZXMgYXR0ZXN0YXRpb25zLiIgIsOAIGTDqWZpbmlyIiB7CiAgICAgICAgICAgICAgICB0YWdzICJQcm9wb3NpdGlvbiIKICAgICAgICAgICAgfQogICAgICAgICAgICBzZXJ2aWNlQ29uc3VsdGF0aW9uID0gY29udGFpbmVyICJTZXJ2aWNlIGRlIGNvbnN1bHRhdGlvbiBJTUVJIiAiQ2FsY3VsZSBITUFDKHBlcHBlciwgSU1FSSksIGludGVycm9nZSBsZSByZWdpc3RyZSBldCBuZSByZW52b2llIHF1ZSBsZSBzdGF0dXQgKG5vbiB0b2vDqW5pc8OpLCBhY3RpZiwgdm9sw6kpLiBQb2ludCBkZSBjZW50cmFsaXNhdGlvbiBhc3N1bcOpIChhcmJpdHJhZ2UgbsKwMSkgOiBsaW1pdGF0aW9uIGRlIGTDqWJpdCwgam91cm5hbCBkJ2F1ZGl0LCByb3RhdGlvbiBkdSBwZXBwZXIuIiAiw4AgZMOpZmluaXIiIHsKICAgICAgICAgICAgICAgIHByb3BlcnRpZXMgewogICAgICAgICAgICAgICAgICAgICJQb2ludCBvdXZlcnQiICJBY2PDqHMgYXUgc2VydmljZSA6IHB1YmxpYyBldCBhbm9ueW1lIGF2ZWMgbGltaXRhdGlvbiwgb3UgcsOpc2VydsOpIGF1eCBjb21wdGVzIHbDqXJpZmnDqXMgPyAobWlzc2lvbi5tZCDCpzkpIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgdGFncyAiUHJvcG9zaXRpb24iICJQb2ludCBvdXZlcnQiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgaHNtID0gY29udGFpbmVyICJIU00gLyBjb2ZmcmUtZm9ydCBkZSBjbMOpcyIgIlN0b2NrZSBsZSBwZXBwZXIgdXRpbGlzw6kgcG91ciBjYWxjdWxlciBsZSBITUFDIGRlIGwnSU1FSS4gTGUgcGVwcGVyIG5lIHBlcm1ldCBhdWN1biBkw6ljaGlmZnJlbWVudC4iICLDgCBkw6lmaW5pciAoSFNNIG91IGNvZmZyZS1mb3J0IGRlIGNsw6lzKSIgewogICAgICAgICAgICAgICAgdGFncyAiUHJvcG9zaXRpb24iICJTdG9ja2FnZSIKICAgICAgICAgICAgfQogICAgICAgICAgICBzbWFydENvbnRyYWN0cyA9IGNvbnRhaW5lciAiU21hcnQgY29udHJhY3RzIGR1IHJlZ2lzdHJlIGRlIGpldG9ucyIgIkNvZGUgZHUgcHJvamV0IGTDqXBsb3nDqSBzdXIgbGEgYmxvY2tjaGFpbiBwdWJsaXF1ZSA6IHVuaWNpdMOpLCBwcm9wcmnDqXTDqSwgdHJhbnNmZXJ0cyBldCBzdGF0dXQgZGVzIGpldG9ucy4iICLDgCBkw6lmaW5pciIgewogICAgICAgICAgICAgICAgdGFncyAiUHJvcG9zaXRpb24iCiAgICAgICAgICAgIH0KICAgICAgICAgICAgYmFzZUluZGV4ID0gY29udGFpbmVyICJCYXNlIGQnaW5kZXgiICJJbmRleCBkdSByZWdpc3RyZSBwYXIgSE1BQyhwZXBwZXIsIElNRUkpLiBSw7RsZSBleGFjdCB2aXMtw6AtdmlzIGR1IHJlZ2lzdHJlIHBvcnTDqSBwYXIgbGEgYmxvY2tjaGFpbiDDoCBjb25maXJtZXIuIiAiw4AgZMOpZmluaXIiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIlByb3Bvc2l0aW9uIiAiU3RvY2thZ2UiCiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIC8vIFJlbGF0aW9ucyDigJQgbml2ZWF1IGNvbnRleHRlCiAgICAgICAgLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAgICAgICAgcmV2ZW5kZXVyIC0+IHN5c3RlbWVUb2tlbmlzYXRpb24gIsOJdGFibGl0IHVuIGxpZW4gZW50cmUgbGEgZmFjdHVyZSBkZSB2ZW50ZSBldCBsZXMgaW5mb3JtYXRpb25zIGR1IHTDqWzDqXBob25lLCBldCBzaWduZSBsJ2F0dGVzdGF0aW9uIGQnb3JpZ2luZSIKICAgICAgICBwcm9wcmlldGFpcmUgLT4gc3lzdGVtZVRva2VuaXNhdGlvbiAiRMOpY2xhcmUgc29uIGFwcGFyZWlsIGV0IGNvbnNlcnZlIGxlcyBpbmZvcm1hdGlvbnMgbsOpY2Vzc2FpcmVzIMOgIHNhIHLDqWNsYW1hdGlvbiIKICAgICAgICBhY3F1ZXJldXIgLT4gc3lzdGVtZVRva2VuaXNhdGlvbiAiQ29uc3VsdGUgbGUgc3RhdHV0IGQndW4gdMOpbMOpcGhvbmUgdmlhIHNvbiBJTUVJIGV0IHJlw6dvaXQgbGUgamV0b24gbG9ycyBkZSBsYSBjZXNzaW9uIgogICAgICAgIHN5c3RlbWVUb2tlbmlzYXRpb24gLT4gZm9yY2VzT3JkcmUgIkZvdXJuaXQsIMOgIGwnaW5pdGlhdGl2ZSBkdSBwcm9wcmnDqXRhaXJlLCBsZXMgw6lsw6ltZW50cyBkZSB0cmHDp2FnZSBkJ3VuIGFwcGFyZWlsIGTDqWNsYXLDqSB2b2zDqSAoZGl2dWxnYXRpb24gc8OpbGVjdGl2ZSkiCiAgICAgICAgc3lzdGVtZVRva2VuaXNhdGlvbiAtPiBpcGZzICJTdG9ja2UgbGVzIGF0dGVzdGF0aW9ucyBjaGlmZnLDqWVzIgogICAgICAgIHN5c3RlbWVUb2tlbmlzYXRpb24gLT4gYmxvY2tjaGFpblB1YmxpcXVlICLDiW1ldCBldCB0cmFuc2bDqHJlIGxlcyBqZXRvbnMiCiAgICAgICAgZm9yY2VzT3JkcmUgLT4gYmxvY2tjaGFpblB1YmxpcXVlICJJZGVudGlmaWUgbGUgcmV2ZW5kZXVyIMOpbWV0dGV1ciBkw6lzaWduw6kgcGFyIGxlIGpldG9uLCBsb3JzcXVlIGwnZW5xdcOqdGUgc2UgZmFpdCBzYW5zIGxlIHByb3ByacOpdGFpcmUiCiAgICAgICAgZm9yY2VzT3JkcmUgLT4gcmV2ZW5kZXVyICJSZXF1aWVydCBsZXMgaW5mb3JtYXRpb25zIGRlIGwnYXR0ZXN0YXRpb24gcGFyIGxhIHZvaWUganVkaWNpYWlyZSBub3JtYWxlLCBsb3JzcXVlIGwnZW5xdcOqdGUgc2UgZmFpdCBzYW5zIGxlIHByb3ByacOpdGFpcmUiCgogICAgICAgIC8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogICAgICAgIC8vIFJlbGF0aW9ucyDigJQgbml2ZWF1IGNvbnRlbmV1cnMKICAgICAgICAvLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICAgICAgICByZXZlbmRldXIgLT4gYXBwUmV2ZW5kZXVyICJVdGlsaXNlIHBvdXIgc2lnbmVyIGwnYXR0ZXN0YXRpb24gZCdvcmlnaW5lIgogICAgICAgIHByb3ByaWV0YWlyZSAtPiBhcHBQcm9wcmlldGFpcmUgIlV0aWxpc2UgcG91ciBwcm91dmVyIHNhIGzDqWdpdGltaXTDqSwgY8OpZGVyIGxlIHTDqWzDqXBob25lIGV0IGTDqWNsYXJlciB1biB2b2wiCiAgICAgICAgYWNxdWVyZXVyIC0+IGFwcFByb3ByaWV0YWlyZSAiUmXDp29pdCBsZSBqZXRvbiIKICAgICAgICBhY3F1ZXJldXIgLT4gc2VydmljZUNvbnN1bHRhdGlvbiAiU2Fpc2l0IGwnSU1FSSBwb3VyIGNvbnN1bHRlciBsZSBzdGF0dXQiCgogICAgICAgIGFwcFJldmVuZGV1ciAtPiBhcGlCYWNrZW5kICJTb3VtZXQgbCdhdHRlc3RhdGlvbiBzaWduw6llIgogICAgICAgIGFwcFJldmVuZGV1ciAtPiBzbWFydENvbnRyYWN0cyAiw4ltZXQgbGUgamV0b24iCiAgICAgICAgYXBwUHJvcHJpZXRhaXJlIC0+IHNtYXJ0Q29udHJhY3RzICJUcmFuc2bDqHJlIGxlIGpldG9uIGV0IG1ldCDDoCBqb3VyIHNvbiBzdGF0dXQiCiAgICAgICAgYXBwUHJvcHJpZXRhaXJlIC0+IGFwaUJhY2tlbmQgIkTDqXBvc2UgZXQgcsOpY3Vww6hyZSBsZXMgYXR0ZXN0YXRpb25zIGNoaWZmcsOpZXMiCiAgICAgICAgYXBwUHJvcHJpZXRhaXJlIC0+IGZvcmNlc09yZHJlICJUcmFuc21ldCBwYXIgZGl2dWxnYXRpb24gc8OpbGVjdGl2ZSBsZXMgw6lsw6ltZW50cyBkZSB0cmHDp2FnZSAoSU1FSSwgbnVtw6lybyBkZSBzw6lyaWUsIG1vZMOobGUsIHJldmVuZGV1cikiCgogICAgICAgIGFwaUJhY2tlbmQgLT4gaXBmcyAiU3RvY2tlIGxlcyBhdHRlc3RhdGlvbnMgY2hpZmZyw6llcyIKICAgICAgICBhcGlCYWNrZW5kIC0+IGJhc2VJbmRleCAiQWxpbWVudGUgbCdpbmRleCIKICAgICAgICBzZXJ2aWNlQ29uc3VsdGF0aW9uIC0+IGhzbSAiVXRpbGlzZSBsZSBwZXBwZXIgcG91ciBjYWxjdWxlciBsZSBITUFDIGRlIGwnSU1FSSIKICAgICAgICBzZXJ2aWNlQ29uc3VsdGF0aW9uIC0+IGJhc2VJbmRleCAiUmVjaGVyY2hlIGxlIGpldG9uIHBhciBITUFDIgogICAgICAgIHNlcnZpY2VDb25zdWx0YXRpb24gLT4gc21hcnRDb250cmFjdHMgIkxpdCBsZSBzdGF0dXQgZHUgamV0b24iCiAgICAgICAgc21hcnRDb250cmFjdHMgLT4gYmxvY2tjaGFpblB1YmxpcXVlICJFc3QgZMOpcGxvecOpIHN1ciIKICAgIH0KCiAgICB2aWV3cyB7CgogICAgICAgIHN5c3RlbUNvbnRleHQgc3lzdGVtZVRva2VuaXNhdGlvbiAiU3lzdGVtQ29udGV4dCIgIlZ1ZSBjb250ZXh0ZSBkdSBzeXN0w6htZSBkZSB0b2vDqW5pc2F0aW9uLiIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIHN5c3RlbWVUb2tlbmlzYXRpb24gIkNvbnRlbmV1cnMiICJDb250ZW5ldXJzIHByb3Bvc8OpcyBkdSBzeXN0w6htZSBkZSB0b2vDqW5pc2F0aW9uLiBMZXMgdGVjaG5vbG9naWVzIHNvbnQgw6AgZMOpZmluaXIgKHBpbGV0ZWNobm9sb2dpcXVlLm1kIGVzdCB2aWRlKS4iIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIGR5bmFtaWMgc3lzdGVtZVRva2VuaXNhdGlvbiAiQ1UyX0Nlc3Npb24iICJDVTIg4oCUIEPDqWRlciB1biB0w6lsw6lwaG9uZSBzYW5zIGZhY3R1cmUuIiB7CiAgICAgICAgICAgIGFjcXVlcmV1ciAtPiBzZXJ2aWNlQ29uc3VsdGF0aW9uICIxLiBTYWlzaXQgbCdJTUVJIGR1IHTDqWzDqXBob25lIgogICAgICAgICAgICBzZXJ2aWNlQ29uc3VsdGF0aW9uIC0+IGhzbSAiMi4gQ2FsY3VsZSBITUFDKHBlcHBlciwgSU1FSSkiCiAgICAgICAgICAgIHNlcnZpY2VDb25zdWx0YXRpb24gLT4gYmFzZUluZGV4ICIzLiBSZWNoZXJjaGUgbGUgamV0b24gcGFyIEhNQUMiCiAgICAgICAgICAgIHNlcnZpY2VDb25zdWx0YXRpb24gLT4gc21hcnRDb250cmFjdHMgIjQuIExpdCBsZSBzdGF0dXQgZHUgamV0b24iCiAgICAgICAgICAgIHByb3ByaWV0YWlyZSAtPiBhcHBQcm9wcmlldGFpcmUgIjUuIFByb3V2ZSBzYSBwb3NzZXNzaW9uIGVuIHNpZ25hbnQgdW4gZMOpZmkgYWzDqWF0b2lyZSAoQ1UxKSIKICAgICAgICAgICAgYXBwUHJvcHJpZXRhaXJlIC0+IHNtYXJ0Q29udHJhY3RzICI2LiBUcmFuc2bDqHJlIGxlIGpldG9uIMOgIGwnYWNxdcOpcmV1ciIKICAgICAgICAgICAgc21hcnRDb250cmFjdHMgLT4gYmxvY2tjaGFpblB1YmxpcXVlICI3LiBFbnJlZ2lzdHJlIGxlIHRyYW5zZmVydCIKICAgICAgICAgICAgYWNxdWVyZXVyIC0+IGFwcFByb3ByaWV0YWlyZSAiOC4gUmXDp29pdCBsZSBqZXRvbiBldCBow6lyaXRlIGRlIGwnaGlzdG9yaXF1ZSIKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBzeXN0ZW1lVG9rZW5pc2F0aW9uICJDVTNfRGVjbGFyYXRpb25Wb2wiICJDVTMg4oCUIETDqWNsYXJlciB1biB2b2wsIGF2ZWMgbGUgcHJvcHJpw6l0YWlyZS4iIHsKICAgICAgICAgICAgcHJvcHJpZXRhaXJlIC0+IGFwcFByb3ByaWV0YWlyZSAiMS4gRMOpY2xhcmUgbGUgdm9sIgogICAgICAgICAgICBhcHBQcm9wcmlldGFpcmUgLT4gc21hcnRDb250cmFjdHMgIjIuIFBhc3NlIGxlIHN0YXR1dCBkdSBqZXRvbiDDoCDCqyB2b2zDqSDCuyIKICAgICAgICAgICAgc21hcnRDb250cmFjdHMgLT4gYmxvY2tjaGFpblB1YmxpcXVlICIzLiBFbnJlZ2lzdHJlIGxlIHN0YXR1dCIKICAgICAgICAgICAgYWNxdWVyZXVyIC0+IHNlcnZpY2VDb25zdWx0YXRpb24gIjQuIENvbnN1bHRlIGxlIHN0YXR1dCB2aWEgbCdJTUVJIgogICAgICAgICAgICBzZXJ2aWNlQ29uc3VsdGF0aW9uIC0+IHNtYXJ0Q29udHJhY3RzICI1LiBMaXQgbGUgc3RhdHV0IMKrIHZvbMOpIMK7IgogICAgICAgICAgICBhcHBQcm9wcmlldGFpcmUgLT4gZm9yY2VzT3JkcmUgIjYuIFRyYW5zbWV0IElNRUksIG51bcOpcm8gZGUgc8OpcmllLCBtb2TDqGxlIGV0IHJldmVuZGV1ciBwYXIgZGl2dWxnYXRpb24gc8OpbGVjdGl2ZSIKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCiAgICAgICAgZHluYW1pYyBzeXN0ZW1lVG9rZW5pc2F0aW9uICJDVTNfU2Fuc1Byb3ByaWV0YWlyZSIgIkNVMyDigJQgRW5xdcOqdGUgc2FucyBsZSBwcm9wcmnDqXRhaXJlIDogcGFzc2FnZSBwYXIgbGUgcmV2ZW5kZXVyIMOpbWV0dGV1ci4iIHsKICAgICAgICAgICAgZm9yY2VzT3JkcmUgLT4gYmxvY2tjaGFpblB1YmxpcXVlICIxLiBJZGVudGlmaWUgbGUgcmV2ZW5kZXVyIMOpbWV0dGV1ciBkw6lzaWduw6kgcGFyIGxlIGpldG9uIgogICAgICAgICAgICBmb3JjZXNPcmRyZSAtPiByZXZlbmRldXIgIjIuIFJlcXVpZXJ0IGxlcyBpbmZvcm1hdGlvbnMgcGFyIGxhIHZvaWUganVkaWNpYWlyZSBub3JtYWxlIgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50ICJQZXJzb24iIHsKICAgICAgICAgICAgICAgIHNoYXBlIFBlcnNvbgogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMDg0MjdiCiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICMxMTY4YmQKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDb250YWluZXIiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzQzOGRkNQogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlN0b2NrYWdlIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlN5c3TDqG1lIGV4dGVybmUiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzk5OTk5OQogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlBvaW50IG91dmVydCIgewogICAgICAgICAgICAgICAgc3Ryb2tlICNkOTgyMmIKICAgICAgICAgICAgICAgIHN0cm9rZVdpZHRoIDUKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJQcm9wb3NpdGlvbiIgewogICAgICAgICAgICAgICAgYm9yZGVyIGRhc2hlZAogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQp9",
     "structurizr.inspection.info" : "0",
     "structurizr.inspection.ignore" : "0",
     "structurizr.inspection.warning" : "0"
   },
   "views" : {
     "configuration" : {
-      "styles" : { },
+      "styles" : {
+        "elements" : [ {
+          "background" : "#438dd5",
+          "color" : "#ffffff",
+          "tag" : "Container"
+        }, {
+          "background" : "#08427b",
+          "color" : "#ffffff",
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "stroke" : "#d9822b",
+          "strokeWidth" : 5,
+          "tag" : "Point ouvert"
+        }, {
+          "border" : "Dashed",
+          "tag" : "Proposition"
+        }, {
+          "background" : "#1168bd",
+          "color" : "#ffffff",
+          "tag" : "Software System"
+        }, {
+          "shape" : "Cylinder",
+          "tag" : "Stockage"
+        }, {
+          "background" : "#999999",
+          "color" : "#ffffff",
+          "tag" : "Système externe"
+        } ]
+      },
       "terminology" : { }
     },
-    "systemContextViews" : [ {
+    "containerViews" : [ {
       "automaticLayout" : {
         "edgeSeparation" : 50,
         "nodeSeparation" : 50,
@@ -80,6 +340,7 @@
         "rankSeparation" : 100,
         "vertices" : true
       },
+      "description" : "Conteneurs proposés du système de tokénisation. Les technologies sont à définir (piletechnologique.md est vide).",
       "elements" : [ {
         "id" : "1",
         "x" : 0,
@@ -96,19 +357,345 @@
         "id" : "4",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "Conteneurs",
+      "name" : "Container View: Système de tokénisation de téléphone reconditionné",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "21"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "25"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "29"
+      }, {
+        "id" : "30"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "37"
+      } ],
+      "softwareSystemId" : "7"
+    } ],
+    "dynamicViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "CU2 — Céder un téléphone sans facture.",
+      "elementId" : "7",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CU2_Cession",
+      "name" : "Dynamic View: Système de tokénisation de téléphone reconditionné",
+      "order" : 3,
+      "relationships" : [ {
+        "description" : "1. Saisit l'IMEI du téléphone",
+        "id" : "26",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "2. Calcule HMAC(pepper, IMEI)",
+        "id" : "34",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "3. Recherche le jeton par HMAC",
+        "id" : "35",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "4. Lit le statut du jeton",
+        "id" : "36",
+        "order" : "4",
+        "response" : false
+      }, {
+        "description" : "5. Prouve sa possession en signant un défi aléatoire (CU1)",
+        "id" : "24",
+        "order" : "5",
+        "response" : false
+      }, {
+        "description" : "6. Transfère le jeton à l'acquéreur",
+        "id" : "29",
+        "order" : "6",
+        "response" : false
+      }, {
+        "description" : "7. Enregistre le transfert",
+        "id" : "37",
+        "order" : "7",
+        "response" : false
+      }, {
+        "description" : "8. Reçoit le jeton et hérite de l'historique",
+        "id" : "25",
+        "order" : "8",
+        "response" : false
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "CU3 — Déclarer un vol, avec le propriétaire.",
+      "elementId" : "7",
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CU3_DeclarationVol",
+      "name" : "Dynamic View: Système de tokénisation de téléphone reconditionné",
+      "order" : 4,
+      "relationships" : [ {
+        "description" : "1. Déclare le vol",
+        "id" : "24",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "2. Passe le statut du jeton à « volé »",
+        "id" : "29",
+        "order" : "2",
+        "response" : false
+      }, {
+        "description" : "3. Enregistre le statut",
+        "id" : "37",
+        "order" : "3",
+        "response" : false
+      }, {
+        "description" : "4. Consulte le statut via l'IMEI",
+        "id" : "26",
+        "order" : "4",
+        "response" : false
+      }, {
+        "description" : "5. Lit le statut « volé »",
+        "id" : "36",
+        "order" : "5",
+        "response" : false
+      }, {
+        "description" : "6. Transmet IMEI, numéro de série, modèle et revendeur par divulgation sélective",
+        "id" : "31",
+        "order" : "6",
+        "response" : false
+      } ]
+    }, {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "CU3 — Enquête sans le propriétaire : passage par le revendeur émetteur.",
+      "elementId" : "7",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalBoundariesVisible" : false,
+      "key" : "CU3_SansProprietaire",
+      "name" : "Dynamic View: Système de tokénisation de téléphone reconditionné",
+      "order" : 5,
+      "relationships" : [ {
+        "description" : "1. Identifie le revendeur émetteur désigné par le jeton",
+        "id" : "21",
+        "order" : "1",
+        "response" : false
+      }, {
+        "description" : "2. Requiert les informations par la voie judiciaire normale",
+        "id" : "22",
+        "order" : "2",
+        "response" : false
+      } ]
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "description" : "Vue contexte du système de tokénisation.",
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "SystemContext",
       "name" : "System Context View: Système de tokénisation de téléphone reconditionné",
       "order" : 1,
       "relationships" : [ {
-        "id" : "5"
+        "id" : "15"
       }, {
-        "id" : "6"
+        "id" : "16"
       }, {
-        "id" : "7"
+        "id" : "17"
+      }, {
+        "id" : "18"
+      }, {
+        "id" : "19"
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "21"
+      }, {
+        "id" : "22"
       } ],
-      "softwareSystemId" : "3"
+      "softwareSystemId" : "7"
     } ]
   }
 }
