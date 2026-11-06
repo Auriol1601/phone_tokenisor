@@ -1,0 +1,114 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2026-11-06T16:10:26Z",
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "name" : "Revendeur de téléphone reconditionné",
+      "properties" : {
+        "structurizr.dsl.identifier" : "revendeur"
+      },
+      "relationships" : [ {
+        "description" : "Établit un lien entre la facture de vente et les informations du téléphone",
+        "destinationId" : "3",
+        "id" : "5",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "id" : "2",
+      "name" : "Propriétaire du téléphone reconditionné",
+      "properties" : {
+        "structurizr.dsl.identifier" : "proprietaire"
+      },
+      "relationships" : [ {
+        "description" : "Déclare son appareil et conserve les informations nécessaires à sa réclamation",
+        "destinationId" : "3",
+        "id" : "6",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "documentation" : { },
+      "id" : "3",
+      "name" : "Système de tokénisation de téléphone reconditionné",
+      "properties" : {
+        "structurizr.dsl.identifier" : "systemeTokenisation"
+      },
+      "relationships" : [ {
+        "description" : "Échange pour rendre le système décentralisé",
+        "destinationId" : "4",
+        "id" : "7",
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "4",
+      "name" : "IPFS",
+      "properties" : {
+        "structurizr.dsl.identifier" : "ipfs"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Système de tokénisation de téléphone reconditionné",
+  "properties" : {
+    "structurizr.inspection.error" : "8",
+    "structurizr.dsl" : "d29ya3NwYWNlICJTeXN0w6htZSBkZSB0b2vDqW5pc2F0aW9uIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIiB7CgogICAgbW9kZWwgewogICAgICAgIHJldmVuZGV1ciA9IHBlcnNvbiAiUmV2ZW5kZXVyIGRlIHTDqWzDqXBob25lIHJlY29uZGl0aW9ubsOpIgogICAgICAgIHByb3ByaWV0YWlyZSA9IHBlcnNvbiAiUHJvcHJpw6l0YWlyZSBkdSB0w6lsw6lwaG9uZSByZWNvbmRpdGlvbm7DqSIKICAgICAgICBzeXN0ZW1lVG9rZW5pc2F0aW9uID0gc29mdHdhcmVTeXN0ZW0gIlN5c3TDqG1lIGRlIHRva8OpbmlzYXRpb24gZGUgdMOpbMOpcGhvbmUgcmVjb25kaXRpb25uw6kiCiAgICAgICAgaXBmcyA9IHNvZnR3YXJlU3lzdGVtICJJUEZTIgoKICAgICAgICByZXZlbmRldXIgLT4gc3lzdGVtZVRva2VuaXNhdGlvbiAiw4l0YWJsaXQgdW4gbGllbiBlbnRyZSBsYSBmYWN0dXJlIGRlIHZlbnRlIGV0IGxlcyBpbmZvcm1hdGlvbnMgZHUgdMOpbMOpcGhvbmUiCiAgICAgICAgcHJvcHJpZXRhaXJlIC0+IHN5c3RlbWVUb2tlbmlzYXRpb24gIkTDqWNsYXJlIHNvbiBhcHBhcmVpbCBldCBjb25zZXJ2ZSBsZXMgaW5mb3JtYXRpb25zIG7DqWNlc3NhaXJlcyDDoCBzYSByw6ljbGFtYXRpb24iCiAgICAgICAgc3lzdGVtZVRva2VuaXNhdGlvbiAtPiBpcGZzICLDiWNoYW5nZSBwb3VyIHJlbmRyZSBsZSBzeXN0w6htZSBkw6ljZW50cmFsaXPDqSIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzeXN0ZW1lVG9rZW5pc2F0aW9uICJTeXN0ZW1Db250ZXh0IiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQogICAgfQp9",
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.warning" : "0"
+  },
+  "views" : {
+    "configuration" : {
+      "styles" : { },
+      "terminology" : { }
+    },
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "SystemContext",
+      "name" : "System Context View: Système de tokénisation de téléphone reconditionné",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "5"
+      }, {
+        "id" : "6"
+      }, {
+        "id" : "7"
+      } ],
+      "softwareSystemId" : "3"
+    } ]
+  }
+}
